@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rapor Nilai</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 30px;
+      text-align: center;
+    }
+    h2 {
+      color: #1e293b;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 80%;
+      background-color: white;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    th {
+      background-color: #1e40af;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .rata {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #1e40af;
+    }
+    input {
+      padding: 6px;
+      width: 60px;
+    }
+    button {
+      margin: 10px 5px;
+      padding: 10px 20px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    .btn-reset {
+      background: #e11d48;
+    }
+    .btn-reset:hover {
+      background: #be123c;
+    }
+    td:nth-child(2) {
+    text-transform: capitalize;
+  }
+  </style>
+</head>
+<body>
+
+  <h2>Input Nilai Rapor</h2>
+  <div id="formInput"></div>
+  <button onclick="prosesNilai()">Lihat Hasil</button>
+  <button class="btn-reset" onclick="resetNilai()">Reset Nilai</button>
+
+  <script>
+    const pelajaran = [
+      "pendidikan agama islam dan budi pekerti",
+      "pendidikan pancasila",
+      "bahasa indonesia",
+      "matematika",
+      "bahasa inggris",
+      "kimia",
+      "biologi",
+      "fisika",
+      "ekonomi",
+      "sejarah",
+      "geografi",
+      "sosiologi",
+      "pendidikan jasmani, olahraga, dan kesehatan",
+      "informatika",
+      "prakarya dan kewirausahaan",
+      "muatan lokal bahasa daerah",
+      "pendidikan anti korupsi"
+    ];
+
+    const formDiv = document.getElementById("formInput");
+
+    // Tampilkan input form
+    let html = '<table><tr><th>No</th><th>Mata Pelajaran</th><th>Nilai</th></tr>';
+    pelajaran.forEach((mapel, i) => {
+      html += `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${mapel}</td>
+          <td><input type="number" id="nilai${i}" min="0" max="100" required></td>
+        </tr>
+      `;
+    });
+    html += '</table>';
+    formDiv.innerHTML = html;
+
+    // Fungsi Proses Nilai
+    function prosesNilai() {
+      let total = 0;
+      let valid = true;
+      let hasil = '<h2>Hasil Rapor Nilai</h2>';
+      hasil += '<table><tr><th>No</th><th>Mata Pelajaran</th><th>Nilai</th></tr>';
+
+      for (let i = 0; i < pelajaran.length; i++) {
+        const input = document.getElementById(`nilai${i}`);
+        const nilai = parseFloat(input.value);
+
+        if (isNaN(nilai) || nilai < 0 || nilai > 100) {
+          alert(`Nilai untuk ${pelajaran[i]} tidak valid (0-100)!`);
+          valid = false;
+          break;
+        }
+
+        total += nilai;
+        hasil += `<tr><td>${i + 1}</td><td>${pelajaran[i]}</td><td>${nilai}</td></tr>`;
+      }
+
+      hasil += '</table>';
+
+      if (valid) {
+        const rata = total / pelajaran.length;
+        hasil += `<div class="rata">Rata-rata Nilai: ${rata.toFixed(2)}</div>`;
+        hasil += `<button onclick="location.reload()">Kembali</button>`;
+        document.body.innerHTML = hasil;
+      }
+    }
+
+    // Fungsi Reset Input Nilai
+    function resetNilai() {
+      pelajaran.forEach((_, i) => {
+        document.getElementById(`nilai${i}`).value = '';
+      });
+    }
+  </script>
+
+</body>
+</html>
